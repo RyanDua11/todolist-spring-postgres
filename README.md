@@ -2,6 +2,16 @@
 
 Uma API REST de gerenciamento de tarefas, construída do zero como projeto prático para aplicar tudo o que aprendi nos cursos (Bradesco, FIAP, IFRS) e na faculdade (ADS) — mas com um propósito real: ser um facilitador de verdade no meu dia a dia, não só um exercício acadêmico.
 
+## 💡 A ideia
+
+Vi a inspiração inicial para um to-do list em um post no Instagram, mas o que estava lá era bem cru: um backend simples com banco de dados temporário (H2, que reseta os dados toda vez que a aplicação reinicia), sem CSS, sem HTML trabalhado — só a funcionalidade básica de CRUD.
+
+Decidi pegar essa ideia como ponto de partida e transformá-la em um projeto de verdade. Queria algo que eu realmente usasse no dia a dia para organizar tarefas, e por isso fui além do básico:
+
+- Troquei o banco temporário por **PostgreSQL persistente**
+- **Containerizei tudo com Docker**, de forma reproduzível
+- Construí uma **interface visual do zero**, com identidade própria
+
 ## ✅ Resultado final
 
 O projeto ficou com:
@@ -18,17 +28,7 @@ O projeto ficou com:
 
 Esse foi meu objetivo desde o início: não só fazer funcionar, mas ter algo apresentável, testado e que eu realmente uso no dia a dia.
 
-Abaixo, todo o processo: a ideia original, a stack, como rodar o projeto, os bugs que enfrentei e as decisões técnicas que tomei.
-
-## 💡 A ideia
-
-Vi a inspiração inicial para um to-do list em um post no Instagram, mas o que estava lá era bem cru: um backend simples com banco de dados temporário (H2, que reseta os dados toda vez que a aplicação reinicia), sem CSS, sem HTML trabalhado — só a funcionalidade básica de CRUD.
-
-Decidi pegar essa ideia como ponto de partida e transformá-la em um projeto de verdade. Queria algo que eu realmente usasse no dia a dia para organizar tarefas, e por isso fui além do básico:
-
-- Troquei o banco temporário por **PostgreSQL persistente**
-- **Containerizei tudo com Docker**, de forma reproduzível
-- Construí uma **interface visual do zero**, com identidade própria
+Abaixo, todo o processo: a stack, como rodar o projeto, os bugs que enfrentei e as decisões técnicas que tomei.
 
 ## 🛠️ Stack utilizada
 
