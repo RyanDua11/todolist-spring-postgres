@@ -113,11 +113,74 @@ src/
         └── TodoListApplicationTests.java
 ```
 
-## 🔭 Próximos passos / evoluções planejadas
+## ✅ Resultado final
 
-- Adicionar camada de **Service**, separando regra de negócio do Controller (boa prática que pretendo aplicar na próxima iteração)
-- Implementar autenticação de usuário
-- Deploy em ambiente gratuito (Render/Railway)
+O projeto ficou com:
+
+- **API REST completa**, com os 4 endpoints principais (`POST`, `GET`, `PUT`, `DELETE`) testados manualmente e funcionando
+- **Banco de dados PostgreSQL persistente**, rodando em container Docker, com persistência validada na prática (dados sobrevivem a restart do container)
+- **Interface visual própria**, em tema dark, com:
+    - Cadastro de tarefas
+    - Marcação de tarefa como concluída (com feedback visual: texto riscado)
+    - Exclusão de tarefas
+    - Animações de hover nos botões
+- **Ambiente 100% reproduzível**: qualquer pessoa consegue clonar o repositório e rodar o projeto do zero com `docker-compose up` + `mvnw spring-boot:run`, sem precisar configurar nada manualmente
+- **3 bugs reais documentados**, com causa raiz, investigação e correção (seção abaixo)
+
+Esse foi meu objetivo desde o início: não só fazer funcionar, mas ter algo apresentável, testado e que eu realmente uso no dia a dia.
+
+## 🔍 Decisões técnicas (com código)
+
+Como não tinha controle de versão desde o início do projeto (mais sobre isso mais abaixo), não tenho como mostrar um "antes" literal do código. Mas vou explicar as decisões técnicas mais importantes da versão final, com o código real:
+
+### Persistência com Docker Compose
+
+```yaml
+services:
+  postgres:
+    image: postgres:latest
+    container_name: todolist-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: todolist
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha123
+    ports:
+      - "5432:5432"
+    volumes:
+      - todolist_postgres_data:/var/lib/postgresql
+
+volumes:
+  todolist_postgres_data:
+    external: true
+```
+
+**Por que assim:** o `volume` nomeado (`todolist_postgres_data`) é o que garante a persistência real dos dados — sem ele, os dados do PostgreSQL ficariam só dentro do container, e seriam perdidos a cada vez que o container fosse removido. Com o volume, o dado fica salvo no Docker independente do ciclo de vida do container. O `restart: unless-stopped` garante que o banco volta a rodar automaticamente caso a máquina reinicie.
+
+### Estrutura da entidade `Todo`
+
+```java
+@Entity
+public class Todo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String titulo;
+    private boolean concluida;
+}
+```
+
+**Por que assim:** usar `@GeneratedValue(strategy = GenerationType.IDENTITY)` delega ao próprio PostgreSQL a geração do ID, evitando que o Java precise controlar isso manualmente — menos chance de conflito de IDs duplicados. O campo `concluida` como `boolean` permite o toggle simples de status que a interface usa pra marcar a tarefa como feita.
+
+## 📌 Sobre este projeto e meu processo de aprendizado
+
+Este é o **meu primeiro projeto** de programação fora da sala de aula, e quero ser transparente sobre como ele foi construído: tive orientação por IA (Claude) ao longo do desenvolvimento — principalmente pra entender conceitos, estrutura e decisões técnicas — mas **todo o código foi escrito manualmente por mim**, linha por linha, com anotações constantes no caderno físico pra fixar melhor cada conceito antes de seguir pro próximo passo.
+
+Esse processo de ir devagar, anotar e entender o porquê de cada decisão (e não só copiar e colar) foi intencional — é assim que eu aprendo melhor, e é o que me deu confiança pra debugar os 3 problemas reais documentados acima sozinho, entendendo de fato a causa raiz de cada um.
+
+Outro ponto que quero deixar registrado com honestidade: este projeto não tinha controle de versão (Git) desde o início do desenvolvimento — eu só entendi a real importância de versionar o código *durante* esse processo, e por isso o repositório só foi criado depois que boa parte do projeto já estava pronta. É uma lição que já levo pros próximos projetos: Git desde o primeiro commit, não como ideia tardia.
+
+Esse projeto está concluído por aqui — não pretendo continuar evoluindo ele, já que o objetivo era consolidar esse aprendizado antes de avançar para o próximo projeto.
 
 ## 👤 Autor
 
