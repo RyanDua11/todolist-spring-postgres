@@ -2,6 +2,24 @@
 
 Uma API REST de gerenciamento de tarefas, construída do zero como projeto prático para aplicar tudo o que aprendi nos cursos (Bradesco, FIAP, IFRS) e na faculdade (ADS) — mas com um propósito real: ser um facilitador de verdade no meu dia a dia, não só um exercício acadêmico.
 
+## ✅ Resultado final
+
+O projeto ficou com:
+
+- **API REST completa**, com os 4 endpoints principais (`POST`, `GET`, `PUT`, `DELETE`) testados manualmente e funcionando
+- **Banco de dados PostgreSQL persistente**, rodando em container Docker, com persistência validada na prática (dados sobrevivem a restart do container)
+- **Interface visual própria**, em tema dark, com:
+    - Cadastro de tarefas
+    - Marcação de tarefa como concluída (com feedback visual: texto riscado)
+    - Exclusão de tarefas
+    - Animações de hover nos botões
+- **Ambiente 100% reproduzível**: qualquer pessoa consegue clonar o repositório e rodar o projeto do zero com `docker-compose up` + `mvnw spring-boot:run`, sem precisar configurar nada manualmente
+- **3 bugs reais documentados**, com causa raiz, investigação e correção (mais abaixo)
+
+Esse foi meu objetivo desde o início: não só fazer funcionar, mas ter algo apresentável, testado e que eu realmente uso no dia a dia.
+
+Abaixo, todo o processo: a ideia original, a stack, como rodar o projeto, os bugs que enfrentei e as decisões técnicas que tomei.
+
 ## 💡 A ideia
 
 Vi a inspiração inicial para um to-do list em um post no Instagram, mas o que estava lá era bem cru: um backend simples com banco de dados temporário (H2, que reseta os dados toda vez que a aplicação reinicia), sem CSS, sem HTML trabalhado — só a funcionalidade básica de CRUD.
@@ -112,22 +130,6 @@ src/
     └── java/com/example/todolist/
         └── TodoListApplicationTests.java
 ```
-
-## ✅ Resultado final
-
-O projeto ficou com:
-
-- **API REST completa**, com os 4 endpoints principais (`POST`, `GET`, `PUT`, `DELETE`) testados manualmente e funcionando
-- **Banco de dados PostgreSQL persistente**, rodando em container Docker, com persistência validada na prática (dados sobrevivem a restart do container)
-- **Interface visual própria**, em tema dark, com:
-    - Cadastro de tarefas
-    - Marcação de tarefa como concluída (com feedback visual: texto riscado)
-    - Exclusão de tarefas
-    - Animações de hover nos botões
-- **Ambiente 100% reproduzível**: qualquer pessoa consegue clonar o repositório e rodar o projeto do zero com `docker-compose up` + `mvnw spring-boot:run`, sem precisar configurar nada manualmente
-- **3 bugs reais documentados**, com causa raiz, investigação e correção (seção abaixo)
-
-Esse foi meu objetivo desde o início: não só fazer funcionar, mas ter algo apresentável, testado e que eu realmente uso no dia a dia.
 
 ## 🔍 Decisões técnicas (com código)
 
