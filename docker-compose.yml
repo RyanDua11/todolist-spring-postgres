@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: todolist-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: todolist
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha123
+    ports:
+      - "5432:5432"
+    volumes:
+      - todolist_postgres_data:/var/lib/postgresql
+
+volumes:
+  todolist_postgres_data:
+    external: true
+    name: "02486818c47348ec459de7c7e299139b59ca89e7579f8ede2bc3d076b6118687"

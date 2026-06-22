@@ -1,0 +1,56 @@
+POST http://localhost:8080/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "Estudar Spring Boot",
+  "concluida": false
+}
+
+###
+
+POST http://localhost:8080/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "Estudar JavaScript",
+  "concluida": false
+}
+
+###
+
+POST http://localhost:8080/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "Estudar Python",
+  "concluida": false
+}
+
+###
+
+PUT http://localhost:8080/tarefas/1
+Content-Type: application/json
+
+{
+  "titulo": "Estudar Spring Boot",
+  "concluida": true
+}
+
+###
+
+POST http://localhost:8080/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "Estudar Postgres",
+  "concluida": false
+}
+
+###
+
+DELETE http://localhost:8080/tarefas/1
+
+###
+
+GET http://localhost:8080/tarefas
+

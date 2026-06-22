@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Lista de Tarefas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(circle at 20% 20%, #1a0505 0%, #0d0d0d 60%);
+            color: #f0f0f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        h1 {
+            color: #ff1f3d;
+            text-align: center;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(255, 31, 61, 0.5);
+            margin-bottom: 30px;
+        }
+
+        #nova-tarefa {
+            background-color: #1a1a1a;
+            border: 1px solid #3a1010;
+            color: #f0f0f0;
+            padding: 12px 14px;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            width: 280px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        #nova-tarefa:focus {
+            border-color: #ff1f3d;
+        }
+
+        #nova-tarefa::placeholder {
+            color: #777;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            transition: transform 0.15s ease, background-color 0.2s ease;
+        }
+
+        body > button {
+            background-color: #ff1f3d;
+            color: #0d0d0d;
+            padding: 12px 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 1rem;
+        }
+
+        body > button:hover {
+            background-color: #ff4d63;
+            transform: translateY(-1px);
+        }
+
+        #lista-tarefas {
+            width: 100%;
+            max-width: 480px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #lista-tarefas > div {
+            background-color: #161616;
+            border: 1px solid #2a2a2a;
+            border-left: 4px solid #ff1f3d;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        #lista-tarefas > div:hover {
+            border-color: #ff1f3d;
+            transform: translateX(2px);
+        }
+
+        #lista-tarefas input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff1f3d;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        #lista-tarefas span {
+            flex: 1;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+
+        #lista-tarefas input[type="checkbox"]:checked + span {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        #lista-tarefas button {
+            background-color: transparent;
+            color: #ff1f3d;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        #lista-tarefas button:hover {
+            background-color: rgba(255, 31, 61, 0.15);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Minha Lista de Tarefas</h1>
+
+<input type="text" id="nova-tarefa" placeholder="Digite a tarefa">
+<button onclick="adicionarTarefa()">Adicionar</button>
+
+<div id="lista-tarefas"></div>
+<script>
+    function adicionarTarefa() {
+        const input = document.getElementById("nova-tarefa")
+        const titulo = input.value;
+
+        fetch("/tarefas", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ titulo: titulo, concluida: false })
+        })
+            .then(() => {
+                carregarTarefas();
+            });
+    }
+
+    function carregarTarefas() {
+        fetch("/tarefas")
+            .then(respostas => respostas.json())
+            .then(tarefas => {
+                const lista = document.getElementById("lista-tarefas")
+                lista.innerHTML = "";
+                tarefas.forEach(tarefa => {
+                    const div = document.createElement("div");
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = tarefa.concluida;
+
+                    checkbox.addEventListener("change", function () {
+                        const concluida = checkbox.checked;
+
+                        fetch("/tarefas/" + tarefa.id, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ titulo: tarefa.titulo, concluida: concluida})
+                        })
+                            .then(() => {
+                                carregarTarefas();
+                            });
+                    });
+
+                    const span = document.createElement("span");
+                    span.textContent = tarefa.titulo;
+
+                    const botaoExcluir = document.createElement("button");
+                    botaoExcluir.textContent = "🗑";
+                    botaoExcluir.dataset.id = tarefa.id;
+
+                    botaoExcluir.addEventListener("click", function () {
+                        console.log("clique no botão, id é:", botaoExcluir.dataset.id);
+                        const id = botaoExcluir.dataset.id;
+                        fetch("/tarefas/" + id, {
+                            method: "DELETE"
+                        })
+                            .then(() => {
+                                carregarTarefas();
+                            });
+                    });
+
+                    div.appendChild(checkbox)
+                    div.appendChild(span);
+                    div.appendChild(botaoExcluir);
+                    lista.appendChild(div);
+                });
+            });
+    }
+    carregarTarefas();
+</script>
+
+</body>
+</html>
